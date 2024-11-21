@@ -4,213 +4,174 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Button Hold Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      text-align: center;
-      background-color: #f0f0f0;
+      background: #f0f4f8;
+      color: #333;
     }
 
     header {
-      background-color: #333;
+      background: #007bff;
       color: white;
-      padding: 1rem 0;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    header h1 {
-      margin: 0;
-    }
-
-    nav button {
-      margin: 5px;
-      padding: 10px 20px;
+    header .menu-toggle {
+      background: none;
       border: none;
-      background-color: #ff6f61;
       color: white;
-      border-radius: 5px;
+      font-size: 20px;
       cursor: pointer;
+    }
+
+    nav {
+      position: absolute;
+      right: 15px;
+      top: 60px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+
+    nav a {
+      display: block;
+      padding: 10px 20px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      background: #007bff;
+      color: white;
+    }
+
+    .main-container {
+      margin-top: 80px;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #007bff;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
     }
 
     .hidden {
       display: none;
     }
-
-    #profileImages img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin: 10px;
-      cursor: pointer;
-      border: 2px solid transparent;
-    }
-
-    #profileImages img.selected {
-      border-color: #ff6f61;
-    }
-
-    table {
-      width: 80%;
-      margin: 20px auto;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-    }
-
-    th {
-      background-color: #333;
-      color: white;
-    }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <h1>Button Hold Game</h1>
+    <span>Button Hold Game</span>
+    <button class="menu-toggle">☰</button>
     <nav>
-      <button id="loginButton">Connexion</button>
-      <button id="registerButton">Inscription</button>
-      <button id="profileButton">Profil</button>
-      <button id="duelButton">Mode Duel</button>
-      <button id="leaderboardButton">Leaderboard</button>
+      <a href="#" id="navProfile">Profil</a>
+      <a href="#" id="navDuel">Mode Duel</a>
+      <a href="#" id="navLeaderboard">Leaderboard</a>
+      <a href="#" id="navLogout">Déconnexion</a>
     </nav>
   </header>
 
-  <main>
-    <section id="authSection" class="hidden">
-      <h2>Connexion</h2>
-      <form id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Email" required>
-        <input type="password" id="loginPassword" placeholder="Mot de passe" required>
-        <button type="submit">Se connecter</button>
-      </form>
-      <h2>Inscription</h2>
-      <form id="registerForm">
-        <input type="email" id="registerEmail" placeholder="Email" required>
-        <input type="password" id="registerPassword" placeholder="Mot de passe" required>
-        <input type="text" id="registerPseudo" placeholder="Pseudo" required>
-        <button type="submit">S'inscrire</button>
-      </form>
-    </section>
-
-    <section id="profileSection" class="hidden">
-      <h2>Modifier votre profil</h2>
-      <div id="profileImages">
-        <!-- Images de profil générées dynamiquement -->
+  <!-- Main Container -->
+  <div class="main-container">
+    <div id="authSection">
+      <div class="form-container">
+        <h1>Connexion</h1>
+        <form id="loginForm">
+          <input type="email" id="loginEmail" placeholder="Email" required>
+          <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+          <button type="submit">Se connecter</button>
+        </form>
+        <hr>
+        <h1>Inscription</h1>
+        <form id="registerForm">
+          <input type="email" id="registerEmail" placeholder="Email" required>
+          <input type="password" id="registerPassword" placeholder="Mot de passe" required>
+          <input type="text" id="registerPseudo" placeholder="Pseudo" required>
+          <button type="submit">S'inscrire</button>
+        </form>
       </div>
-      <button id="saveProfile">Enregistrer</button>
-    </section>
-
-    <section id="duelSection" class="hidden">
-      <h2>Mode Duel</h2>
-      <p id="duelStatus">En attente d’un adversaire...</p>
-      <button id="joinDuel">Rejoindre la file d'attente</button>
-    </section>
-
-    <section id="leaderboardSection" class="hidden">
-      <h2>Leaderboard</h2>
-      <table id="leaderboardTable">
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Photo</th>
-            <th>Pseudo</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Contenu généré dynamiquement -->
-        </tbody>
-      </table>
-    </section>
-  </main>
+    </div>
+    <div id="gameSection" class="hidden">
+      <h1>Bienvenue dans le jeu</h1>
+      <button id="playButton">Jouer</button>
+    </div>
+    <div id="profileSection" class="hidden">
+      <h1>Profil</h1>
+      <p>Pseudo : <span id="profilePseudo"></span></p>
+      <p>Dernier score : <span id="profileScore"></span></p>
+      <div id="profileImages"></div>
+      <button id="saveProfile">Enregistrer l'image</button>
+    </div>
+    <div id="duelSection" class="hidden">
+      <h1>Mode Duel</h1>
+      <p id="duelStatus">En attente d'un adversaire...</p>
+      <button id="joinDuel">Rejoindre la file</button>
+    </div>
+  </div>
 
   <script>
-    const backendUrl = 'https://buttonhold.onrender.com';
-
-    // Sections
-    const authSection = document.getElementById("authSection");
-    const profileSection = document.getElementById("profileSection");
-    const duelSection = document.getElementById("duelSection");
-    const leaderboardSection = document.getElementById("leaderboardSection");
-
-    // Navigation
-    document.getElementById("loginButton").addEventListener("click", () => showSection(authSection));
-    document.getElementById("registerButton").addEventListener("click", () => showSection(authSection));
-    document.getElementById("profileButton").addEventListener("click", () => showSection(profileSection));
-    document.getElementById("duelButton").addEventListener("click", () => showSection(duelSection));
-    document.getElementById("leaderboardButton").addEventListener("click", () => loadLeaderboard());
-
-    // Inscription
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("registerEmail").value;
-      const password = document.getElementById("registerPassword").value;
-      const pseudo = document.getElementById("registerPseudo").value;
-
-      const response = await fetch(`${backendUrl}/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, pseudo })
-      });
-
-      if (response.ok) {
-        alert("Inscription réussie !");
-      } else {
-        alert("Erreur lors de l'inscription.");
-      }
+    // Exemple de logique
+    document.querySelector('.menu-toggle').addEventListener('click', () => {
+      const nav = document.querySelector('nav');
+      nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Connexion
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+    // Placeholder pour navigation
+    document.querySelector('#navProfile').addEventListener('click', () => showSection('profileSection'));
+    document.querySelector('#navDuel').addEventListener('click', () => showSection('duelSection'));
+    document.querySelector('#navLeaderboard').addEventListener('click', () => alert('Leaderboard en développement'));
 
-      const response = await fetch(`${backendUrl}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("user", JSON.stringify(data.user));
-        alert("Connexion réussie !");
-      } else {
-        alert("Erreur de connexion.");
-      }
-    });
-
-    // Charger le leaderboard
-    async function loadLeaderboard() {
-      showSection(leaderboardSection);
-      const response = await fetch(`${backendUrl}/leaderboard`);
-      const leaderboard = await response.json();
-
-      const tbody = document.querySelector("#leaderboardTable tbody");
-      tbody.innerHTML = "";
-
-      leaderboard.forEach((entry, index) => {
-        const row = `
-          <tr>
-            <td>${index + 1}</td>
-            <td><img src="./images/${entry.profileImage}" alt="${entry.pseudo}" style="width:50px; height:50px; border-radius:50%;"></td>
-            <td>${entry.pseudo}</td>
-            <td>${entry.time}</td>
-          </tr>
-        `;
-        tbody.innerHTML += row;
-      });
-    }
-
-    // Afficher une section
-    function showSection(section) {
-      [authSection, profileSection, duelSection, leaderboardSection].forEach(s => s.classList.add("hidden"));
-      section.classList.remove("hidden");
+    function showSection(sectionId) {
+      document.querySelectorAll('.main-container > div').forEach(div => div.classList.add('hidden'));
+      document.getElementById(sectionId).classList.remove('hidden');
     }
   </script>
 </body>
