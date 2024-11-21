@@ -2,28 +2,26 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-// Middleware pour gérer les CORS et JSON
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Tableau pour stocker le leaderboard
+// Leaderboard en mémoire
 let leaderboard = [];
 
 // Endpoint pour ajouter un score
 app.post("/score", (req, res) => {
   const { name, time } = req.body;
 
-  // Vérifie que les données envoyées sont valides
+  // Validation basique des données
   if (!name || typeof time !== "number" || time < 10) {
-    return res.status(400).json({ error: "Invalid score or name, minimum 10 seconds required." });
+    return res.status(400).json({ error: "Invalid score or name. Minimum 10 seconds required." });
   }
 
-  // Ajoute le score au leaderboard
+  // Ajoute le score au leaderboard et trie
   leaderboard.push({ name, time });
-
-  // Trie par temps décroissant et garde les 10 meilleurs scores
   leaderboard.sort((a, b) => b.time - a.time);
-  leaderboard = leaderboard.slice(0, 10);
+  leaderboard = leaderboard.slice(0, 10); // Conserve uniquement les 10 meilleurs scores
 
   res.sendStatus(200);
 });
@@ -34,6 +32,7 @@ app.get("/leaderboard", (req, res) => {
 });
 
 // Démarre le serveur
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
