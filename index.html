@@ -3,247 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Button Hold Challenge</title>
+  <title>Button Hold Game</title>
   <style>
-    /* Style global */
     body {
-      background: linear-gradient(135deg, #1e1e2f, #25253a, #1e1e2f);
-      color: #f4f4f4;
-      font-family: 'Roboto', Arial, sans-serif;
-      text-align: center;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      animation: gradientAnimation 10s ease infinite;
-      background-size: 400% 400%;
-      user-select: none; /* Désactive la sélection de texte */
-      -webkit-user-select: none; /* Spécifique pour iOS */
-      touch-action: manipulation; /* Empêche les comportements tactiles indésirables */
-    }
-
-    h1 {
-      margin: 20px 0;
-      font-size: 2.5rem;
-      color: #ff6f61;
-    }
-
-    input#pseudo {
-      margin: 20px 0;
-      padding: 10px;
-      font-size: 1rem;
-      border: 2px solid #ff6f61;
-      border-radius: 5px;
-      background-color: #2e2e4e;
-      color: #f4f4f4;
-      user-select: none; /* Désactive la sélection */
-      -webkit-user-select: none;
-      touch-action: manipulation;
-    }
-
-    input#pseudo:focus {
-      outline: none;
-      border-color: #ff896b;
-    }
-
-    button#button {
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #fff;
-      background-color: #ff6f61;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-      user-select: none; /* Empêche la sélection de texte */
-      -webkit-user-select: none; /* iOS */
-      touch-action: manipulation; /* Empêche les comportements tactiles par défaut */
-    }
-
-    button#button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(255, 111, 97, 0.5);
-      background-color: #ff896b;
-    }
-
-    button#button:active {
-      transform: scale(0.95);
-    }
-
-    #timer {
-      margin: 20px 0;
-      font-size: 1.5rem;
-    }
-
-    #leaderboard {
-      margin-top: 30px;
       text-align: center;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 1rem 0;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    nav button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #ff6f61;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #profileImages img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    #profileImages img.selected {
+      border-color: #ff6f61;
     }
 
     table {
+      width: 80%;
       margin: 20px auto;
       border-collapse: collapse;
-      width: 90%;
-      max-width: 600px;
-      font-size: 1rem;
-      color: #f4f4f4;
-      user-select: none; /* Empêche la sélection */
-      -webkit-user-select: none;
     }
 
     th, td {
+      border: 1px solid #ddd;
       padding: 10px;
-      border: 1px solid #3e3e5e;
-      text-align: center;
     }
 
     th {
-      background-color: #2e2e4e;
-      font-size: 1.1rem;
-    }
-
-    @media (max-width: 768px) {
-      button#button {
-        padding: 25px 50px; /* Rendre le bouton plus grand */
-        font-size: 1.5rem;
-      }
-
-      input#pseudo {
-        font-size: 1.2rem;
-        padding: 12px;
-      }
-    }
-
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    #dynamicMessage {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #ff6f61;
+      background-color: #333;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <h1>Button Hold Challenge</h1>
-  <input id="pseudo" placeholder="Enter your name" />
-  <br>
-  <button id="button">Hold Me!</button>
-  <div id="timer">Time: 0.00s</div>
-  <div id="dynamicMessage"></div>
-  <h2>Leaderboard</h2>
-  <div id="leaderboard">Loading...</div>
+  <header>
+    <h1>Button Hold Game</h1>
+    <nav>
+      <button id="loginButton">Connexion</button>
+      <button id="registerButton">Inscription</button>
+      <button id="profileButton">Profil</button>
+      <button id="duelButton">Mode Duel</button>
+      <button id="leaderboardButton">Leaderboard</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="authSection" class="hidden">
+      <h2>Connexion</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+      </form>
+      <h2>Inscription</h2>
+      <form id="registerForm">
+        <input type="email" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Mot de passe" required>
+        <input type="text" id="registerPseudo" placeholder="Pseudo" required>
+        <button type="submit">S'inscrire</button>
+      </form>
+    </section>
+
+    <section id="profileSection" class="hidden">
+      <h2>Modifier votre profil</h2>
+      <div id="profileImages">
+        <!-- Images de profil générées dynamiquement -->
+      </div>
+      <button id="saveProfile">Enregistrer</button>
+    </section>
+
+    <section id="duelSection" class="hidden">
+      <h2>Mode Duel</h2>
+      <p id="duelStatus">En attente d’un adversaire...</p>
+      <button id="joinDuel">Rejoindre la file d'attente</button>
+    </section>
+
+    <section id="leaderboardSection" class="hidden">
+      <h2>Leaderboard</h2>
+      <table id="leaderboardTable">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Photo</th>
+            <th>Pseudo</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Contenu généré dynamiquement -->
+        </tbody>
+      </table>
+    </section>
+  </main>
 
   <script>
-    let startTime, timerInterval, isMouseDown = false;
-    const timerElement = document.getElementById("timer");
-    const button = document.getElementById("button");
-    const pseudoInput = document.getElementById("pseudo");
-    const messageElement = document.getElementById("dynamicMessage");
-
-    // URL de ton backend hébergé
     const backendUrl = 'https://buttonhold.onrender.com';
 
-    // Liste des messages dynamiques
-    const messages = {
-      10: "Bon début",
-      30: "On commence ?",
-      60: "Ok commençons",
-      120: "Toujours là ?",
-      130: "Lâche ce bouton...",
-      200: "Je t’ai dit de lâcher, non ?"
-    };
+    // Sections
+    const authSection = document.getElementById("authSection");
+    const profileSection = document.getElementById("profileSection");
+    const duelSection = document.getElementById("duelSection");
+    const leaderboardSection = document.getElementById("leaderboardSection");
 
-    // Fonction pour jouer un son
-    function playSound(filePath) {
-      const audio = new Audio(filePath);
-      audio.play();
-    }
+    // Navigation
+    document.getElementById("loginButton").addEventListener("click", () => showSection(authSection));
+    document.getElementById("registerButton").addEventListener("click", () => showSection(authSection));
+    document.getElementById("profileButton").addEventListener("click", () => showSection(profileSection));
+    document.getElementById("duelButton").addEventListener("click", () => showSection(duelSection));
+    document.getElementById("leaderboardButton").addEventListener("click", () => loadLeaderboard());
 
-    // Met à jour le leaderboard
-    function updateLeaderboard() {
-      fetch(`${backendUrl}/leaderboard`)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error("Failed to fetch leaderboard");
-          }
-          return res.json();
-        })
-        .then(data => {
-          const leaderboard = document.getElementById("leaderboard");
-          leaderboard.innerHTML = `
-            <table>
-              <tr><th>Rank</th><th>Name</th><th>Time</th></tr>
-              ${data.map((entry, i) => `
-                <tr><td>${i + 1}</td><td>${entry.name}</td><td>${entry.time.toFixed(2)}s</td></tr>
-              `).join("")}
-            </table>
-          `;
-        })
-        .catch(err => {
-          console.error('Error fetching leaderboard:', err);
-          document.getElementById("leaderboard").innerHTML = "Failed to load leaderboard.";
-        });
-    }
+    // Inscription
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      const pseudo = document.getElementById("registerPseudo").value;
 
-    // Gère l'appui sur le bouton
-    function startHolding(event) {
-      if (!pseudoInput.value) {
-        alert("Please enter your name!");
-        return;
-      }
-      if (isMouseDown) return; // Empêche les multiples appuis
-      isMouseDown = true;
-      startTime = Date.now();
-      timerInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        timerElement.textContent = `Time: ${elapsed.toFixed(2)}s`;
-        if (messages[elapsed]) {
-          messageElement.textContent = messages[elapsed];
-          playSound('audio/message-sound.mp3'); // Joue un son pour les messages
-        }
-      }, 1000);
-
-      event.preventDefault(); // Empêche les comportements par défaut
-    }
-
-    // Gère le relâchement du bouton
-    function stopHolding(event) {
-      if (!isMouseDown) return;
-      isMouseDown = false;
-      clearInterval(timerInterval);
-      const finalTime = (Date.now() - startTime) / 1000;
-      timerElement.textContent = `Final Time: ${finalTime.toFixed(2)}s`;
-
-      // Envoie le score au serveur
-      fetch(`${backendUrl}/score`, {
+      const response = await fetch(`${backendUrl}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: pseudoInput.value, time: finalTime })
-      })
-      .then(() => updateLeaderboard())
-      .catch(err => console.error('Error sending score:', err));
+        body: JSON.stringify({ email, password, pseudo })
+      });
 
-      event.preventDefault();
+      if (response.ok) {
+        alert("Inscription réussie !");
+      } else {
+        alert("Erreur lors de l'inscription.");
+      }
+    });
+
+    // Connexion
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const response = await fetch(`${backendUrl}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("user", JSON.stringify(data.user));
+        alert("Connexion réussie !");
+      } else {
+        alert("Erreur de connexion.");
+      }
+    });
+
+    // Charger le leaderboard
+    async function loadLeaderboard() {
+      showSection(leaderboardSection);
+      const response = await fetch(`${backendUrl}/leaderboard`);
+      const leaderboard = await response.json();
+
+      const tbody = document.querySelector("#leaderboardTable tbody");
+      tbody.innerHTML = "";
+
+      leaderboard.forEach((entry, index) => {
+        const row = `
+          <tr>
+            <td>${index + 1}</td>
+            <td><img src="./images/${entry.profileImage}" alt="${entry.pseudo}" style="width:50px; height:50px; border-radius:50%;"></td>
+            <td>${entry.pseudo}</td>
+            <td>${entry.time}</td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
     }
 
-    // Ajoute les événements pour desktop et mobile
-    button.addEventListener("mousedown", startHolding);
-    button.addEventListener("mouseup", stopHolding);
-    button.addEventListener("touchstart", startHolding, { passive: false });
-    button.addEventListener("touchend", stopHolding, { passive: false });
-    window.addEventListener("mouseup", stopHolding);
-    window.addEventListener("touchend", stopHolding, { passive: false });
-
-    // Empêche le défilement pendant l'appui tactile
-    document.addEventListener('touchmove', (event) => {
-      event.preventDefault();
-    }, { passive: false });
-
-    // Charge le leaderboard dès le début
-    updateLeaderboard();
+    // Afficher une section
+    function showSection(section) {
+      [authSection, profileSection, duelSection, leaderboardSection].forEach(s => s.classList.add("hidden"));
+      section.classList.remove("hidden");
+    }
   </script>
 </body>
 </html>
