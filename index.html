@@ -10,83 +10,68 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f0f4f8;
-      color: #333;
+      background: #f8f9fa;
+      color: #212529;
+      overflow-x: hidden;
     }
 
     header {
       background: #007bff;
       color: white;
-      padding: 15px;
+      padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: fixed;
-      width: 100%;
       top: 0;
+      left: 0;
+      width: 100%;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
     }
 
-    header .menu-toggle {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
     }
 
     nav {
-      position: absolute;
-      right: 15px;
-      top: 60px;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    nav button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      background: #0056b3;
+      border: none;
       border-radius: 5px;
-      overflow: hidden;
-      display: none;
-    }
-
-    nav a {
-      display: block;
-      padding: 10px 20px;
-      color: #333;
-      text-decoration: none;
-    }
-
-    nav a:hover {
-      background: #007bff;
       color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
 
-    .main-container {
-      margin-top: 80px;
-      padding: 20px;
+    nav button:hover {
+      background: #003d80;
     }
 
-    h1 {
-      font-size: 24px;
-      color: #007bff;
-    }
-
-    .form-container {
-      max-width: 400px;
-      margin: 50px auto;
+    .container {
+      margin: 80px auto;
+      max-width: 500px;
+      text-align: center;
       padding: 20px;
       background: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    input[type="email"],
-    input[type="password"],
-    input[type="text"],
-    button {
+    input, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     button {
@@ -104,75 +89,128 @@
     .hidden {
       display: none;
     }
+
+    #profileImages img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    #profileImages img.selected {
+      border-color: #007bff;
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
-    <span>Button Hold Game</span>
-    <button class="menu-toggle">☰</button>
+    <h1>Button Hold Game</h1>
     <nav>
-      <a href="#" id="navProfile">Profil</a>
-      <a href="#" id="navDuel">Mode Duel</a>
-      <a href="#" id="navLeaderboard">Leaderboard</a>
-      <a href="#" id="navLogout">Déconnexion</a>
+      <button id="navProfile" class="hidden">Profil</button>
+      <button id="navGame" class="hidden">Jouer</button>
+      <button id="navLogout" class="hidden">Déconnexion</button>
     </nav>
   </header>
 
-  <!-- Main Container -->
-  <div class="main-container">
-    <div id="authSection">
-      <div class="form-container">
-        <h1>Connexion</h1>
-        <form id="loginForm">
-          <input type="email" id="loginEmail" placeholder="Email" required>
-          <input type="password" id="loginPassword" placeholder="Mot de passe" required>
-          <button type="submit">Se connecter</button>
-        </form>
-        <hr>
-        <h1>Inscription</h1>
-        <form id="registerForm">
-          <input type="email" id="registerEmail" placeholder="Email" required>
-          <input type="password" id="registerPassword" placeholder="Mot de passe" required>
-          <input type="text" id="registerPseudo" placeholder="Pseudo" required>
-          <button type="submit">S'inscrire</button>
-        </form>
-      </div>
+  <main>
+    <!-- Connexion / Inscription -->
+    <div id="authSection" class="container">
+      <h2>Connexion</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+      </form>
+      <h2>Inscription</h2>
+      <form id="registerForm">
+        <input type="email" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Mot de passe" required>
+        <input type="text" id="registerPseudo" placeholder="Pseudo" required>
+        <button type="submit">S'inscrire</button>
+      </form>
     </div>
-    <div id="gameSection" class="hidden">
-      <h1>Bienvenue dans le jeu</h1>
+
+    <!-- Page principale -->
+    <div id="gameSection" class="hidden container">
+      <h2>Bienvenue dans le jeu</h2>
       <button id="playButton">Jouer</button>
     </div>
-    <div id="profileSection" class="hidden">
-      <h1>Profil</h1>
+
+    <!-- Profil -->
+    <div id="profileSection" class="hidden container">
+      <h2>Mon Profil</h2>
       <p>Pseudo : <span id="profilePseudo"></span></p>
-      <p>Dernier score : <span id="profileScore"></span></p>
-      <div id="profileImages"></div>
+      <p>Dernier score : <span id="profileScore">0</span></p>
+      <div id="profileImages">
+        <!-- Images de profil -->
+      </div>
       <button id="saveProfile">Enregistrer l'image</button>
     </div>
-    <div id="duelSection" class="hidden">
-      <h1>Mode Duel</h1>
-      <p id="duelStatus">En attente d'un adversaire...</p>
-      <button id="joinDuel">Rejoindre la file</button>
-    </div>
-  </div>
+  </main>
 
   <script>
-    // Exemple de logique
-    document.querySelector('.menu-toggle').addEventListener('click', () => {
-      const nav = document.querySelector('nav');
-      nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+    const backendUrl = 'https://buttonhold.onrender.com'; // Remplace par ton URL backend
+
+    // Affichage des sections
+    const showSection = (sectionId) => {
+      document.querySelectorAll("main > div").forEach(div => div.classList.add("hidden"));
+      document.getElementById(sectionId).classList.remove("hidden");
+    };
+
+    // Navigation
+    document.getElementById("navProfile").addEventListener("click", () => showSection("profileSection"));
+    document.getElementById("navGame").addEventListener("click", () => showSection("gameSection"));
+    document.getElementById("navLogout").addEventListener("click", () => {
+      localStorage.removeItem("user");
+      location.reload();
     });
 
-    // Placeholder pour navigation
-    document.querySelector('#navProfile').addEventListener('click', () => showSection('profileSection'));
-    document.querySelector('#navDuel').addEventListener('click', () => showSection('duelSection'));
-    document.querySelector('#navLeaderboard').addEventListener('click', () => alert('Leaderboard en développement'));
+    // Connexion
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
 
-    function showSection(sectionId) {
-      document.querySelectorAll('.main-container > div').forEach(div => div.classList.add('hidden'));
-      document.getElementById(sectionId).classList.remove('hidden');
-    }
-  </script>
-</body>
-</html>
+      const response = await fetch(`${backendUrl}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const { user } = await response.json();
+        localStorage.setItem("user", JSON.stringify(user));
+        initializeUser(user);
+      } else {
+        alert("Erreur de connexion.");
+      }
+    });
+
+    // Inscription
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      const pseudo = document.getElementById("registerPseudo").value;
+
+      const response = await fetch(`${backendUrl}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, pseudo })
+      });
+
+      if (response.ok) {
+        alert("Inscription réussie ! Connectez-vous.");
+      } else {
+        alert("Erreur lors de l'inscription.");
+      }
+    });
+
+    // Initialisation après connexion
+    const initializeUser = (user) => {
+      document.getElementById("profilePseudo").textContent = user.pseudo;
+      showSection("gameSection");
+      document.getElementById("navProfile").classList.remove("hidden");
+      document.getElementById("navGame").
