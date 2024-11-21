@@ -15,8 +15,9 @@
       padding: 0;
       animation: gradientAnimation 10s ease infinite;
       background-size: 400% 400%;
-      user-select: none; /* Empêche la sélection de texte */
-      -webkit-user-select: none;
+      user-select: none; /* Désactive la sélection de texte */
+      -webkit-user-select: none; /* Spécifique pour iOS */
+      touch-action: manipulation; /* Empêche les comportements tactiles indésirables */
     }
 
     h1 {
@@ -33,6 +34,9 @@
       border-radius: 5px;
       background-color: #2e2e4e;
       color: #f4f4f4;
+      user-select: none; /* Désactive la sélection */
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
 
     input#pseudo:focus {
@@ -51,7 +55,8 @@
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
       user-select: none; /* Empêche la sélection de texte */
-      -webkit-user-select: none;
+      -webkit-user-select: none; /* iOS */
+      touch-action: manipulation; /* Empêche les comportements tactiles par défaut */
     }
 
     button#button:hover {
@@ -81,6 +86,8 @@
       max-width: 600px;
       font-size: 1rem;
       color: #f4f4f4;
+      user-select: none; /* Empêche la sélection */
+      -webkit-user-select: none;
     }
 
     th, td {
@@ -199,8 +206,7 @@
         }
       }, 1000);
 
-      // Empêche les comportements par défaut (comme le défilement ou la sélection de texte)
-      event.preventDefault();
+      event.preventDefault(); // Empêche les comportements par défaut
     }
 
     // Gère le relâchement du bouton
@@ -217,19 +223,18 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: pseudoInput.value, time: finalTime })
       })
-      .then(() => updateLeaderboard()) // Met à jour le leaderboard
+      .then(() => updateLeaderboard())
       .catch(err => console.error('Error sending score:', err));
 
-      // Empêche les comportements par défaut
       event.preventDefault();
     }
 
     // Ajoute les événements pour desktop et mobile
     button.addEventListener("mousedown", startHolding);
     button.addEventListener("mouseup", stopHolding);
-    button.addEventListener("touchstart", startHolding, { passive: false }); // Mobile: Détecte l'appui tactile
-    button.addEventListener("touchend", stopHolding, { passive: false });   // Mobile: Détecte le relâchement tactile
-    window.addEventListener("mouseup", stopHolding); // Empêche le glissement hors du bouton
+    button.addEventListener("touchstart", startHolding, { passive: false });
+    button.addEventListener("touchend", stopHolding, { passive: false });
+    window.addEventListener("mouseup", stopHolding);
     window.addEventListener("touchend", stopHolding, { passive: false });
 
     // Empêche le défilement pendant l'appui tactile
