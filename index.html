@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Hold Challenge</title>
+  <style>
+    /* Style global */
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #25253a, #1e1e2f);
+      color: #f4f4f4;
+      font-family: 'Roboto', Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      animation: gradientAnimation 10s ease infinite;
+      background-size: 400% 400%;
+    }
+
+    h1 {
+      margin: 20px 0;
+      font-size: 2.5rem;
+      color: #ff6f61;
+    }
+
+    input#pseudo {
+      margin: 20px 0;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #ff6f61;
+      border-radius: 5px;
+      background-color: #2e2e4e;
+      color: #f4f4f4;
+    }
+
+    input#pseudo:focus {
+      outline: none;
+      border-color: #ff896b;
+    }
+
+    button#button {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fff;
+      background-color: #ff6f61;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    button#button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(255, 111, 97, 0.5);
+      background-color: #ff896b;
+    }
+
+    button#button:active {
+      transform: scale(0.95);
+    }
+
+    #timer {
+      margin: 20px 0;
+      font-size: 1.5rem;
+    }
+
+    #leaderboard {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 600px;
+      font-size: 1rem;
+      color: #f4f4f4;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #3e3e5e;
+      text-align: center;
+    }
+
+    th {
+      background-color: #2e2e4e;
+      font-size: 1.1rem;
+    }
+
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #dynamicMessage {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #ff6f61;
+    }
+  </style>
+</head>
+<body>
+  <h1>Button Hold Challenge</h1>
+  <input id="pseudo" placeholder="Enter your name" />
+  <br>
+  <button id="button">Hold Me!</button>
+  <div id="timer">Time: 0.00s</div>
+  <div id="dynamicMessage"></div>
+  <h2>Leaderboard</h2>
+  <div id="leaderboard">Loading...</div>
+
+  <script>
+    let startTime, timerInterval, isMouseDown = false;
+    const timerElement = document.getElementById("timer");
+    const button = document.getElementById("button");
+    const pseudoInput = document.getElementById("pseudo");
+    const messageElement = document.getElementById("dynamicMessage");
+
+    // Liste des messages dynamiques
+    const messages = {
+      10: "Bon début",
+      30: "On commence ?",
+      60: "Ok commençons",
+      120: "Toujours là ?",
+      130: "Lâche ce bouton...",
+      200: "Je t’ai dit de lâcher, non ?"
+    };
+
+    // Fonction pour jouer un son
+    function playSound(filePath) {
+      const audio = new Audio(filePath);
+      audio.play();
+    }
+
+    // Met à jour le leaderboard
+    function updateLeaderboard() {
+      fetch('http://localhost:3000/leaderboard')
+        .then(res => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch leaderboard");
+          }
+          return res.json();
+        })
+        .then(data => {
+          const leaderboard = document.getElementById("leaderboard");
+          leaderboard.innerHTML = `
+            <table>
+              <tr><th>Rank</th><th>Name</th><th>Time</th></tr>
+              ${data.map((entry, i) => `
+                <tr><td>${i + 1}</td><td>${entry.name}</td><td>${entry.time.toFixed(2)}s</td></tr>
+              `).join("")}
+            </table>
+          `;
+        })
+        .catch(err => {
+          console.error('Error fetching leaderboard:', err);
+          document.getElementById("leaderboard").innerHTML = "Failed to load leaderboard.";
+        });
+    }
+
+    // Gère l'appui sur le bouton
+    button.addEventListener("mousedown", () => {
+      if (!pseudoInput.value) {
+        alert("Please enter your name!");
+        return;
+      }
+      if (isMouseDown) return; // Empêche les multiples appuis
+      isMouseDown = true;
+      startTime = Date.now();
+      timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        timerElement.textContent = `Time: ${elapsed.toFixed(2)}s`;
+        if (messages[elapsed]) {
+          messageElement.textContent = messages[elapsed];
+          playSound('audio/message-sound.mp3'); // Joue un son uniquement pour les messages
+        }
+      }, 1000);
+    });
+
+    // Gère le relâchement du bouton
+    function stopHolding() {
+      if (!isMouseDown) return;
+      isMouseDown = false;
+      clearInterval(timerInterval);
+      const finalTime = (Date.now() - startTime) / 1000;
+      timerElement.textContent = `Final Time: ${finalTime.toFixed(2)}s`;
+
+      // Envoie le score au serveur
+      fetch('http://localhost:3000/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: pseudoInput.value, time: finalTime })
+      })
+      .then(() => updateLeaderboard()) // Met à jour le leaderboard
+      .catch(err => console.error('Error sending score:', err));
+    }
+
+    button.addEventListener("mouseup", stopHolding);
+    window.addEventListener("mouseup", stopHolding); // Empêche le glissement hors du bouton
+
+    // Charge le leaderboard dès le début
+    updateLeaderboard();
+  </script>
+</body>
+</html>
+
