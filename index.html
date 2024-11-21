@@ -120,6 +120,9 @@
     const pseudoInput = document.getElementById("pseudo");
     const messageElement = document.getElementById("dynamicMessage");
 
+    // URL de ton backend hébergé
+    const backendUrl = 'https://buttonhold.onrender.com';
+
     // Liste des messages dynamiques
     const messages = {
       10: "Bon début",
@@ -138,7 +141,7 @@
 
     // Met à jour le leaderboard
     function updateLeaderboard() {
-      fetch('http://localhost:3000/leaderboard')
+      fetch(`${backendUrl}/leaderboard`)
         .then(res => {
           if (!res.ok) {
             throw new Error("Failed to fetch leaderboard");
@@ -176,7 +179,7 @@
         timerElement.textContent = `Time: ${elapsed.toFixed(2)}s`;
         if (messages[elapsed]) {
           messageElement.textContent = messages[elapsed];
-          playSound('audio/message-sound.mp3'); // Joue un son uniquement pour les messages
+          playSound('audio/message-sound.mp3'); // Joue un son pour les messages
         }
       }, 1000);
     });
@@ -190,7 +193,7 @@
       timerElement.textContent = `Final Time: ${finalTime.toFixed(2)}s`;
 
       // Envoie le score au serveur
-      fetch('http://localhost:3000/score', {
+      fetch(`${backendUrl}/score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: pseudoInput.value, time: finalTime })
@@ -207,4 +210,3 @@
   </script>
 </body>
 </html>
-
