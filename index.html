@@ -10,13 +10,13 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f8f9fa;
+      background: #e8f5e9; /* Couleur modifiée */
       color: #212529;
       overflow-x: hidden;
     }
 
     header {
-      background: #007bff;
+      background: #388e3c; /* Couleur modifiée */
       color: white;
       padding: 15px 20px;
       display: flex;
@@ -43,7 +43,7 @@
     nav button {
       margin-left: 10px;
       padding: 10px 15px;
-      background: #0056b3;
+      background: #4caf50; /* Couleur modifiée */
       border: none;
       border-radius: 5px;
       color: white;
@@ -52,7 +52,7 @@
     }
 
     nav button:hover {
-      background: #003d80;
+      background: #2e7d32; /* Couleur modifiée */
     }
 
     .container {
@@ -75,7 +75,7 @@
     }
 
     button {
-      background: #007bff;
+      background: #388e3c; /* Couleur modifiée */
       color: white;
       border: none;
       cursor: pointer;
@@ -83,7 +83,7 @@
     }
 
     button:hover {
-      background: #0056b3;
+      background: #2e7d32; /* Couleur modifiée */
     }
 
     .hidden {
@@ -100,7 +100,7 @@
     }
 
     #profileImages img.selected {
-      border-color: #007bff;
+      border-color: #388e3c; /* Couleur modifiée */
     }
   </style>
 </head>
@@ -153,21 +153,11 @@
   <script>
     const backendUrl = 'https://buttonhold.onrender.com'; // Remplace par ton URL backend
 
-    // Affichage des sections
     const showSection = (sectionId) => {
       document.querySelectorAll("main > div").forEach(div => div.classList.add("hidden"));
       document.getElementById(sectionId).classList.remove("hidden");
     };
 
-    // Navigation
-    document.getElementById("navProfile").addEventListener("click", () => showSection("profileSection"));
-    document.getElementById("navGame").addEventListener("click", () => showSection("gameSection"));
-    document.getElementById("navLogout").addEventListener("click", () => {
-      localStorage.removeItem("user");
-      location.reload();
-    });
-
-    // Connexion
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
@@ -188,29 +178,13 @@
       }
     });
 
-    // Inscription
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("registerEmail").value;
-      const password = document.getElementById("registerPassword").value;
-      const pseudo = document.getElementById("registerPseudo").value;
-
-      const response = await fetch(`${backendUrl}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, pseudo })
-      });
-
-      if (response.ok) {
-        alert("Inscription réussie ! Connectez-vous.");
-      } else {
-        alert("Erreur lors de l'inscription.");
-      }
-    });
-
-    // Initialisation après connexion
     const initializeUser = (user) => {
       document.getElementById("profilePseudo").textContent = user.pseudo;
       showSection("gameSection");
       document.getElementById("navProfile").classList.remove("hidden");
-      document.getElementById("navGame").
+      document.getElementById("navGame").classList.remove("hidden");
+      document.getElementById("navLogout").classList.remove("hidden");
+    };
+  </script>
+</body>
+</html>
