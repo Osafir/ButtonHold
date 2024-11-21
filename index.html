@@ -15,6 +15,8 @@
       padding: 0;
       animation: gradientAnimation 10s ease infinite;
       background-size: 400% 400%;
+      user-select: none; /* Empêche la sélection de texte */
+      -webkit-user-select: none;
     }
 
     h1 {
@@ -48,6 +50,8 @@
       border-radius: 50px;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+      user-select: none; /* Empêche la sélection de texte */
+      -webkit-user-select: none;
     }
 
     button#button:hover {
@@ -88,6 +92,18 @@
     th {
       background-color: #2e2e4e;
       font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      button#button {
+        padding: 25px 50px; /* Rendre le bouton plus grand */
+        font-size: 1.5rem;
+      }
+
+      input#pseudo {
+        font-size: 1.2rem;
+        padding: 12px;
+      }
     }
 
     @keyframes gradientAnimation {
@@ -166,7 +182,7 @@
     }
 
     // Gère l'appui sur le bouton
-    button.addEventListener("mousedown", () => {
+    function startHolding(event) {
       if (!pseudoInput.value) {
         alert("Please enter your name!");
         return;
@@ -182,10 +198,13 @@
           playSound('audio/message-sound.mp3'); // Joue un son pour les messages
         }
       }, 1000);
-    });
+
+      // Empêche les comportements par défaut (comme le défilement ou la sélection de texte)
+      event.preventDefault();
+    }
 
     // Gère le relâchement du bouton
-    function stopHolding() {
+    function stopHolding(event) {
       if (!isMouseDown) return;
       isMouseDown = false;
       clearInterval(timerInterval);
@@ -200,10 +219,23 @@
       })
       .then(() => updateLeaderboard()) // Met à jour le leaderboard
       .catch(err => console.error('Error sending score:', err));
+
+      // Empêche les comportements par défaut
+      event.preventDefault();
     }
 
+    // Ajoute les événements pour desktop et mobile
+    button.addEventListener("mousedown", startHolding);
     button.addEventListener("mouseup", stopHolding);
+    button.addEventListener("touchstart", startHolding, { passive: false }); // Mobile: Détecte l'appui tactile
+    button.addEventListener("touchend", stopHolding, { passive: false });   // Mobile: Détecte le relâchement tactile
     window.addEventListener("mouseup", stopHolding); // Empêche le glissement hors du bouton
+    window.addEventListener("touchend", stopHolding, { passive: false });
+
+    // Empêche le défilement pendant l'appui tactile
+    document.addEventListener('touchmove', (event) => {
+      event.preventDefault();
+    }, { passive: false });
 
     // Charge le leaderboard dès le début
     updateLeaderboard();
